@@ -11,6 +11,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   }
 
   const text = message.input || '';
+  const button = message.button || 0;
   let state = {
     page: 0,
   };
@@ -19,8 +20,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   } catch (e) {
     console.error(e);
   }
-  
-  const title = 'Open Frames - OnchainKit Starter';
+
   return new NextResponse(
     getFrameHtmlResponse({
       buttons: [
@@ -35,16 +35,15 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
           target: `${NEXT_PUBLIC_URL}/api/post`,
         },
         {
-          action: 'tx',
-          label: 'Tx',
-          target: `${NEXT_PUBLIC_URL}/api/tx`,
-          postUrl: `${NEXT_PUBLIC_URL}/api/tx-success`,
+          action: 'post',
+          label: 'Post',
+          target: `${NEXT_PUBLIC_URL}/api/post`,
         },
       ],
       isOpenFrame: true,
       accepts: { xmtp: 'vNext' },
       image: {
-        src: `${NEXT_PUBLIC_URL}/api/images?title=${title}`,
+        src: `${NEXT_PUBLIC_URL}/api/images?text=${text}&button=${button}`,
       },
       postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
       state: {
