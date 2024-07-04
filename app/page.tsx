@@ -21,6 +21,9 @@ const frameMetadata = getFrameMetadata({
       postUrl: `${NEXT_PUBLIC_URL}/api/tx-success`,
     },
   ],
+  state: {
+    count: 0,
+  },
   isOpenFrame: true,
   accepts: { xmtp: 'vNext' },
   image: {
@@ -30,11 +33,11 @@ const frameMetadata = getFrameMetadata({
 });
 
 export const metadata: Metadata = {
-  title: 'zizzamia.xyz',
-  description: 'LFG',
+  title: 'Open Frames Starter - OnchainKit Next.js',
+  description: 'Starter Suite for Open Frames with OnchainKit and Next.js',
   openGraph: {
-    title: 'zizzamia.xyz',
-    description: 'LFG',
+    title: 'Open Frames Starter - OnchainKit Next.js',
+    description: 'Starter Suite for Open Frames with OnchainKit and Next.js',
     images: [`${NEXT_PUBLIC_URL}/park-1.png`],
   },
   other: {
@@ -45,7 +48,7 @@ export const metadata: Metadata = {
 export default function Page() {
   return (
     <>
-      <h1>zizzamia.xyz</h1>
+      <h1>builders.garden</h1>
     </>
   );
 }

@@ -5,13 +5,14 @@ import { baseSepolia } from 'viem/chains';
 import BuyMeACoffeeABI from '../../_contracts/BuyMeACoffeeABI';
 import { BUY_MY_COFFEE_CONTRACT_ADDR } from '../../config';
 import type { FrameTransactionResponse } from '@coinbase/onchainkit/frame';
+import { validateFrameMessage } from '../../lib/utils';
 
 async function getResponse(req: NextRequest): Promise<NextResponse | Response> {
   const body: FrameRequest = await req.json();
-  // Remember to replace 'NEYNAR_ONCHAIN_KIT' with your own Neynar API key
-  const { isValid } = await getFrameMessage(body, { neynarApiKey: 'NEYNAR_ONCHAIN_KIT' });
-
-  if (!isValid) {
+  try {
+    await validateFrameMessage(body);
+  } catch (e) {
+    console.error(e);
     return new NextResponse('Message not valid', { status: 500 });
   }
 
@@ -20,7 +21,6 @@ async function getResponse(req: NextRequest): Promise<NextResponse | Response> {
     functionName: 'buyCoffee',
     args: [parseEther('1'), 'Coffee all day!'],
   });
-
   const txData: FrameTransactionResponse = {
     chainId: `eip155:${baseSepolia.id}`,
     method: 'eth_sendTransaction',

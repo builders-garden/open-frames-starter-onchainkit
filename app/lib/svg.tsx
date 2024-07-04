@@ -19,9 +19,9 @@ export const generateFrameImage = async (data: { label: string; value: string }[
         justifyContent: 'space-around',
       }}
     >
-      {data.map((d) => (
-        <p style={{ fontSize: '2rem', color: '#000000' }}>
-          {d.label}: {d.value}
+      {data.map((d, index) => (
+        <p key={index} style={{ fontSize: '2rem', color: '#000000' }}>
+          {d.label !== 'title' ? `${d.label}: ${d.value}` : `${d.value}`}
         </p>
       ))}
     </div>,

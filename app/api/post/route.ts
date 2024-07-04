@@ -1,53 +1,46 @@
-import { FrameRequest, getFrameMessage, getFrameHtmlResponse } from '@coinbase/onchainkit/frame';
+import { getFrameHtmlResponse } from '@coinbase/onchainkit/frame';
 import { NextRequest, NextResponse } from 'next/server';
 import { NEXT_PUBLIC_URL } from '../../config';
+import { validateFrameMessage } from '../../lib/utils';
 
 async function getResponse(req: NextRequest): Promise<NextResponse> {
-  const body: FrameRequest = await req.json();
-  const { isValid, message } = await getFrameMessage(body, { neynarApiKey: 'NEYNAR_ONCHAIN_KIT' });
+  const body = await req.json();
 
-  if (!isValid) {
-    return new NextResponse('Message not valid', { status: 500 });
-  }
-
-  const text = message.input || '';
-  const button = message.button || 0;
+  let message = undefined;
   let state = {
-    page: 0,
+    count: 0,
   };
+  let buttonIndex;
+  let text;
+
   try {
-    state = JSON.parse(decodeURIComponent(message.state?.serialized));
+    const data = await validateFrameMessage(body);
+    message = data.message;
+    state = data.state;
+    buttonIndex = data.buttonIndex;
+    text = data.text;
   } catch (e) {
     console.error(e);
+    return new NextResponse('Message not valid', { status: 500 });
   }
 
   return new NextResponse(
     getFrameHtmlResponse({
       buttons: [
         {
-          action: 'link',
-          label: 'OnchainKit',
-          target: 'https://github.com/builders-garden/open-frames-starter-onchainkit',
-        },
-        {
           action: 'post',
-          label: 'Post',
-          target: `${NEXT_PUBLIC_URL}/api/post`,
-        },
-        {
-          action: 'post',
-          label: 'Post',
-          target: `${NEXT_PUBLIC_URL}/api/post`,
+          label: 'Back',
+          target: `${NEXT_PUBLIC_URL}/api/frame`,
         },
       ],
       isOpenFrame: true,
       accepts: { xmtp: 'vNext' },
       image: {
-        src: `${NEXT_PUBLIC_URL}/api/images?text=${text}&button=${button}`,
+        src: `${NEXT_PUBLIC_URL}/api/images?Count=${state?.count}&Your%20Input=${text}&You%20Clicked%20Button=${buttonIndex}`,
       },
       postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
       state: {
-        page: state?.page + 1,
+        count: state?.count + 1,
         time: new Date().toISOString(),
       },
     }),

@@ -1,25 +1,30 @@
 import { FrameRequest, getFrameMessage, getFrameHtmlResponse } from '@coinbase/onchainkit/frame';
 import { NextRequest, NextResponse } from 'next/server';
 import { NEXT_PUBLIC_URL } from '../../config';
+import { validateFrameMessage } from '../../lib/utils';
 
 async function getResponse(req: NextRequest): Promise<NextResponse> {
   const body: FrameRequest = await req.json();
-  const { isValid, message } = await getFrameMessage(body, { neynarApiKey: 'NEYNAR_ONCHAIN_KIT' });
 
-  if (!isValid) {
-    return new NextResponse('Message not valid', { status: 500 });
-  }
-
-  const text = message.input || '';
+  let message = undefined;
   let state = {
-    page: 0,
+    count: 0,
   };
+  let buttonIndex;
+  let text;
+
   try {
-    state = JSON.parse(decodeURIComponent(message.state?.serialized));
+    const data = await validateFrameMessage(body);
+    message = data.message;
+    state = data.state;
+    buttonIndex = data.buttonIndex;
+    text = data.text;
   } catch (e) {
     console.error(e);
+    return new NextResponse('Message not valid', { status: 500 });
   }
   
+
   const title = 'Open Frames - OnchainKit Starter';
   return new NextResponse(
     getFrameHtmlResponse({
@@ -48,7 +53,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
       },
       postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
       state: {
-        page: state?.page + 1,
+        count: state?.count,
         time: new Date().toISOString(),
       },
     }),
