@@ -8,11 +8,13 @@ export const validateFrameMessage = async (body: any) => {
   };
   let buttonIndex;
   let text;
+  let address;
   if (body.clientProtocol?.startsWith('xmtp@')) {
     const { isValid, message: frameMessage } = await getXmtpFrameMessage(body);
     if (!isValid) {
       throw new Error('Message not valid');
     }
+    address = frameMessage?.verifiedWalletAddress;
     message = frameMessage;
     buttonIndex = message?.buttonIndex;
     text = message?.inputText;
@@ -31,7 +33,9 @@ export const validateFrameMessage = async (body: any) => {
       throw new Error('Message not valid');
     }
     message = frameMessage;
-    text = buttonIndex = message.button;
+    address = message.address;
+    text = message.input;
+    buttonIndex = message.button;
     try {
       state = JSON.parse(decodeURIComponent(message.state.serialized));
     } catch (e) {
@@ -45,5 +49,6 @@ export const validateFrameMessage = async (body: any) => {
     state,
     buttonIndex,
     text,
+    address,
   };
 };

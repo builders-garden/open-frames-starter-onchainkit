@@ -17,11 +17,18 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
     getFrameHtmlResponse({
       buttons: [
         {
-          label: `Tx: ${body?.untrustedData?.transactionId || '--'}`,
+          label: `Back`,
+          action: 'post',
+          target: `${NEXT_PUBLIC_URL}/api/frame`,
         },
       ],
+      isOpenFrame: true,
+      accepts: { xmtp: 'vNext' },
       image: {
-        src: `${NEXT_PUBLIC_URL}/api/images?label=Tx&value=${body?.untrustedData?.transactionId}`,
+        src: `${NEXT_PUBLIC_URL}/api/images?Transaction=Successfull`,
+      },
+      state: {
+        count: 0,
       },
     }),
   );
