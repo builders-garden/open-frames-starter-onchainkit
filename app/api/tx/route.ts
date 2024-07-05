@@ -25,7 +25,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse | Response> {
     chainId: `eip155:${baseSepolia.id}`,
     method: 'eth_sendTransaction',
     params: {
-      abi: [],
+      abi: BuyMeACoffeeABI,
       data,
       to: BUY_MY_COFFEE_CONTRACT_ADDR,
       value: parseEther('0.00004').toString(), // 0.00004 ETH
