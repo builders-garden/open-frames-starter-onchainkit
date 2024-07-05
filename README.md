@@ -21,4 +21,4 @@ This starter repo includes a simple frame with an input field 3 buttons and:
 
 1. Install: `yarn`
 2. Run: `yarn dev`
-3. Debug: visit `http://localhost:3000`
+3. Debug: `yarn debug`

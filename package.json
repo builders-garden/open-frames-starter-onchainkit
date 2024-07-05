@@ -6,13 +6,15 @@
     "dev": "next dev",
     "format": "prettier --log-level warn --write .",
     "start": "next start",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "debug": "frames"
   },
   "keywords": [],
   "author": "https://twitter.com/Zizzamia",
   "license": "MIT",
   "dependencies": {
     "@coinbase/onchainkit": "0.14.1",
+    "@frames.js/debugger": "^0.3.3",
     "@xmtp/frames-validator": "^0.6.2",
     "bufferutil": "^4.0.8",
     "next": "13.5.6",
